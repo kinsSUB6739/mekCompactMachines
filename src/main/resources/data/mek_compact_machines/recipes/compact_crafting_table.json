@@ -1,0 +1,15 @@
+{
+  "type": "mekanism:metallurgic_infusing",
+  "itemInput": {
+    "ingredient": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "chemicalInput": {
+    "amount": 1600,
+    "infuse_type": "mekanism:refined_obsidian"
+  },
+  "output": {
+    "item": "mek_compact_machines:compact_crafting_table"
+  }
+}

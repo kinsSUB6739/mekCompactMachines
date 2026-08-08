@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mek_compact_machines:item/subspace_cardboard"
+  }
+}
