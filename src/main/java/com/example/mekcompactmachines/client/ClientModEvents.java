@@ -1,5 +1,7 @@
-package com.example.mekcompactmachines;
+package com.example.mekcompactmachines.client;
 
+import com.example.mekcompactmachines.client.screen.CompactCraftorScreen;
+import com.example.mekcompactmachines.init.ModMenuTypes;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,7 +14,7 @@ public class ClientModEvents {
 	@SubscribeEvent
 	public static void onClientSetup(FMLClientSetupEvent event) {
 		event.enqueueWork(() -> {
-			MenuScreens.register(ModMenuTypes.COMPACT_MACHINE_MENU.get(), CompactMachineScreen::new);
+			MenuScreens.register(ModMenuTypes.COMPACT_CRAFTOR.get(), CompactCraftorScreen::new);
 		});
 	}
 }

@@ -1,5 +1,6 @@
-package com.example.mekcompactmachines;
+package com.example.mekcompactmachines.init;
 
+import com.example.mekcompactmachines.MyMekAddon;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -19,7 +20,7 @@ public class ModCreativeTabs {
                         // アイテムを並べる順番を指定
                         output.accept(ModItems.SUBSPACE_CARDBOARD.get());       // 段ボール
                         output.accept(ModItems.COMPACT_CRAFTING_TABLE.get());   // 作業台 (追加)
-                        output.accept(ModItems.COMPACT_INDUCTION_MATRIX.get()); // マトリックス (追加)
+//                        output.accept(ModItems.COMPACT_INDUCTION_MATRIX.get()); // マトリックス (追加)
                     })
                     .build());
 }

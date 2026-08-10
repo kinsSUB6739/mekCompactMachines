@@ -1,5 +1,6 @@
-package com.example.mekcompactmachines;
+package com.example.mekcompactmachines.init;
 
+import com.example.mekcompactmachines.block.CompactCraftor.CompactCraftorMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -15,8 +16,8 @@ public class ModMenuTypes {
 			DeferredRegister.create(ForgeRegistries.MENU_TYPES, "mek_compact_machines");
 
 	// メニューの登録
-	public static final RegistryObject<MenuType<CompactMachineMenu>> COMPACT_MACHINE_MENU =
-			registerMenuType("compact_machine_menu", CompactMachineMenu::new);
+	public static final RegistryObject<MenuType<CompactCraftorMenu>> COMPACT_CRAFTOR =
+			registerMenuType("compact_craftor", CompactCraftorMenu::new);
 
 	// ヘルパーメソッド: IForgeMenuTypeを使って登録する定型文
 	private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {

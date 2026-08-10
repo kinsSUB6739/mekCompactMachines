@@ -1,5 +1,6 @@
-package com.example.mekcompactmachines;
+package com.example.mekcompactmachines.client.screen;
 
+import com.example.mekcompactmachines.block.CompactCraftor.CompactCraftorMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -9,10 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import static com.example.mekcompactmachines.MyMekAddon.MODID;
 
-public class CompactMachineScreen extends AbstractContainerScreen<CompactMachineMenu> {
-	private static final ResourceLocation TEXTURE= new ResourceLocation(MODID, "textures/gui/craftingtable_gui.png");
+public class CompactCraftorScreen extends AbstractContainerScreen<CompactCraftorMenu> {
 
-	public CompactMachineScreen(CompactMachineMenu menu, Inventory inventory, Component title) {
+	// ★ 修正: fromNamespaceAndPath を使用する
+	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/craftingtable_gui.png");
+	private static final ResourceLocation GHOST_ICON = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/ghost_icon.png");
+
+	public CompactCraftorScreen(CompactCraftorMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
 		this.imageWidth = 176;
 		this.imageHeight = 166;
@@ -22,8 +26,7 @@ public class CompactMachineScreen extends AbstractContainerScreen<CompactMachine
 	protected void init() {
 		super.init();
 	}
-	private static final ResourceLocation GHOST_ICON =
-			new ResourceLocation(MODID, "textures/gui/ghost_icon.png"); // ※画像パスは適宜変えてください
+
 	@Override
 	protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -34,6 +37,7 @@ public class CompactMachineScreen extends AbstractContainerScreen<CompactMachine
 		graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 		int progressWidth = menu.getScaledProgress();
 		graphics.blit(TEXTURE, x + 86, y + 36, 178, 6, progressWidth, 15);
+
 		if (!this.menu.slots.get(0).hasItem()) {
 			RenderSystem.enableBlend();
 			RenderSystem.defaultBlendFunc();
@@ -52,5 +56,4 @@ public class CompactMachineScreen extends AbstractContainerScreen<CompactMachine
 		super.render(graphics, mouseX, mouseY, partialTick);
 		renderTooltip(graphics, mouseX, mouseY);
 	}
-
 }
