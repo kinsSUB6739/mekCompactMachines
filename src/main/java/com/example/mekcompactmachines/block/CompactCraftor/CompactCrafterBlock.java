@@ -10,8 +10,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class CompactCraftorBlock extends AbstractCompactMachineBlock {
-	public CompactCraftorBlock(Properties properties) {
+public class CompactCrafterBlock extends AbstractCompactMachineBlock {
+	public CompactCrafterBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -19,7 +19,7 @@ public class CompactCraftorBlock extends AbstractCompactMachineBlock {
 	@Nullable
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new CompactCraftorEntity(pos, state);
+		return new CompactCrafterEntity(pos, state);
 	}
 
 	// ② 毎Tickの自動クラフト処理（tick）を動かすための設定
@@ -29,7 +29,7 @@ public class CompactCraftorBlock extends AbstractCompactMachineBlock {
 		if (level.isClientSide()) {
 			return null;
 		}
-		return createTickerHelper(type, ModBlockEntities.COMPACT_CRAFTOR.get(),CompactCraftorEntity::tick);
+		return createTickerHelper(type, ModBlockEntities.COMPACT_CRAFTER.get(), CompactCrafterEntity::tick);
 	}
 
 	@Nullable

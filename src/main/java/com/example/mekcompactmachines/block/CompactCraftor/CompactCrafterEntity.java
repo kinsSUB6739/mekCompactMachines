@@ -17,7 +17,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class CompactCraftorEntity extends AbstractCompactMachineEntity {
+public class CompactCrafterEntity extends AbstractCompactMachineEntity {
 	private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
 		@Override
 		protected void onContentsChanged(int slot) {
@@ -37,16 +37,16 @@ public class CompactCraftorEntity extends AbstractCompactMachineEntity {
 	private int progress = 0;
 	private int maxProgress = 200;
 
-	public CompactCraftorEntity(BlockPos pos, BlockState state) {
+	public CompactCrafterEntity(BlockPos pos, BlockState state) {
 		// ★修正1: スロット数を実際の数に合わせて「4」にする！
-		super(ModBlockEntities.COMPACT_CRAFTOR.get(), pos, state, 4);
+		super(ModBlockEntities.COMPACT_CRAFTER.get(), pos, state, 4);
 
 		this.data = new ContainerData() {
 			@Override
 			public int get(int index) {
 				return switch (index) {
-					case 0 -> CompactCraftorEntity.this.progress;
-					case 1 -> CompactCraftorEntity.this.maxProgress;
+					case 0 -> CompactCrafterEntity.this.progress;
+					case 1 -> CompactCrafterEntity.this.maxProgress;
 					default -> 0;
 				};
 			}
@@ -54,8 +54,8 @@ public class CompactCraftorEntity extends AbstractCompactMachineEntity {
 			@Override
 			public void set(int index, int value) {
 				switch (index) {
-					case 0 -> CompactCraftorEntity.this.progress = value;
-					case 1 -> CompactCraftorEntity.this.maxProgress = value;
+					case 0 -> CompactCrafterEntity.this.progress = value;
+					case 1 -> CompactCrafterEntity.this.maxProgress = value;
 				}
 			}
 
@@ -94,10 +94,10 @@ public class CompactCraftorEntity extends AbstractCompactMachineEntity {
 	@Nullable
 	@Override
 	public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-		return new CompactCraftorMenu(containerId, playerInventory, this, this.data);
+		return new CompactCrafterMenu(containerId, playerInventory, this, this.data);
 	}
 
-	public static void tick(Level level, BlockPos pos, BlockState state, CompactCraftorEntity pEntity) {
+	public static void tick(Level level, BlockPos pos, BlockState state, CompactCrafterEntity pEntity) {
 		if (level.isClientSide()) {
 			return;
 		}
@@ -123,7 +123,7 @@ public class CompactCraftorEntity extends AbstractCompactMachineEntity {
 		}
 	}
 
-	private static void craftItem(CompactCraftorEntity pEntity) {
+	private static void craftItem(CompactCrafterEntity pEntity) {
 		pEntity.itemHandler.getStackInSlot(0).shrink(1536);
 		pEntity.itemHandler.getStackInSlot(1).shrink(200);
 		pEntity.itemHandler.getStackInSlot(2).shrink(1);

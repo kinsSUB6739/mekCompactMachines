@@ -1,6 +1,6 @@
 package com.example.mekcompactmachines.client.screen;
 
-import com.example.mekcompactmachines.block.CompactCraftor.CompactCraftorMenu;
+import com.example.mekcompactmachines.block.CompactCraftor.CompactCrafterMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -10,13 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import static com.example.mekcompactmachines.MyMekAddon.MODID;
 
-public class CompactCraftorScreen extends AbstractContainerScreen<CompactCraftorMenu> {
+public class CompactCrafterScreen extends AbstractContainerScreen<CompactCrafterMenu> {
 
 	// ★ 修正: fromNamespaceAndPath を使用する
 	private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/craftingtable_gui.png");
 	private static final ResourceLocation GHOST_ICON = ResourceLocation.fromNamespaceAndPath(MODID, "textures/gui/ghost_icon.png");
 
-	public CompactCraftorScreen(CompactCraftorMenu menu, Inventory inventory, Component title) {
+	public CompactCrafterScreen(CompactCrafterMenu menu, Inventory inventory, Component title) {
 		super(menu, inventory, title);
 		this.imageWidth = 176;
 		this.imageHeight = 166;

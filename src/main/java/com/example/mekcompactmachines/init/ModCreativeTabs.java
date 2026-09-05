@@ -19,7 +19,7 @@ public class ModCreativeTabs {
                     .displayItems((parameters, output) -> {
                         // アイテムを並べる順番を指定
                         output.accept(ModItems.SUBSPACE_CARDBOARD.get());       // 段ボール
-                        output.accept(ModItems.COMPACT_CRAFTING_TABLE.get());   // 作業台 (追加)
+                        output.accept(ModItems.COMPACT_CRAFTER.get());   // 作業台 (追加)
 //                        output.accept(ModItems.COMPACT_INDUCTION_MATRIX.get()); // マトリックス (追加)
                     })
                     .build());

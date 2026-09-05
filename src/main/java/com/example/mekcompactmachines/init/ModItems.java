@@ -10,8 +10,8 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, MyMekAddon.MODID);
     public static final RegistryObject<Item> SUBSPACE_CARDBOARD = ITEMS.register("subspace_cardboard",
             () -> new Item(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> COMPACT_CRAFTING_TABLE = ITEMS.register("compact_crafting_table",
-            () -> new BlockItem(ModBlocks.COMPACT_CRAFTOR.get(), new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> COMPACT_CRAFTER = ITEMS.register("compact_crafter",
+            () -> new BlockItem(ModBlocks.COMPACT_CRAFTER.get(), new Item.Properties().stacksTo(64)));
 //    public static final RegistryObject<Item> COMPACT_INDUCTION_MATRIX = ITEMS.register("compact_induction_matrix",
 //            () -> new BlockItem(ModBlocks.COMPACT_INDUCTION_MATRIX.get(), new Item.Properties().stacksTo(64)));
 }

@@ -13,19 +13,19 @@ import net.minecraftforge.items.SlotItemHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-public class CompactCraftorMenu extends AbstractCompactMachineMenu {
+public class CompactCrafterMenu extends AbstractCompactMachineMenu {
 	private static final int SLOT_NUM = 4;
-	public final CompactCraftorEntity blockEntity;
+	public final CompactCrafterEntity blockEntity;
 	private final ContainerLevelAccess levelAccess;
 	private final ContainerData data;
 
-	public CompactCraftorMenu(int containerId, Inventory inv, FriendlyByteBuf extraData) {
+	public CompactCrafterMenu(int containerId, Inventory inv, FriendlyByteBuf extraData) {
 		this(containerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
 	}
 
-	public CompactCraftorMenu(int containerId, Inventory inv, BlockEntity entity, ContainerData data) {
-		super(ModMenuTypes.COMPACT_CRAFTOR.get(), containerId,SLOT_NUM);
-		blockEntity = (CompactCraftorEntity) entity;
+	public CompactCrafterMenu(int containerId, Inventory inv, BlockEntity entity, ContainerData data) {
+		super(ModMenuTypes.COMPACT_CRAFTER.get(), containerId,SLOT_NUM);
+		blockEntity = (CompactCrafterEntity) entity;
 		this.levelAccess = ContainerLevelAccess.create(inv.player.level(), entity.getBlockPos());
 		this.data = data;
 		addDataSlots(data);
@@ -65,7 +65,7 @@ public class CompactCraftorMenu extends AbstractCompactMachineMenu {
 
 	@Override
 	public boolean stillValid(Player player) {
-		return stillValid(levelAccess, player, ModBlocks.COMPACT_CRAFTOR.get());
+		return stillValid(levelAccess, player, ModBlocks.COMPACT_CRAFTER.get());
 	}
 
 	static class OutputSlotItemHandler extends SlotItemHandler {
