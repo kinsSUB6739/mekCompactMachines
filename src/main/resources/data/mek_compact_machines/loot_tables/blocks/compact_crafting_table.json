@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "mek_compact_machines:compact_crafting_table"
+          "name": "mek_compact_machines:compact_crafter"
         }
       ],
       "conditions": [

@@ -1,40 +1,37 @@
 package com.example.mekcompactmachines.block.CompactCraftor;
 
 import com.example.mekcompactmachines.block.AbstractCompactMachineBlock;
-import com.example.mekcompactmachines.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Compact Crafter（コンパクトクラフター）のブロッククラス。
+ * <p>
+ * {@link AbstractCompactMachineBlock} を継承し、専用のブロックエンティティ（{@link CompactCrafterEntity}）の生成を行います。
+ */
 public class CompactCrafterBlock extends AbstractCompactMachineBlock {
-	public CompactCrafterBlock(Properties properties) {
-		super(properties);
-	}
 
-	// ① 作業台専用の BlockEntity を生み出す
-	@Nullable
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new CompactCrafterEntity(pos, state);
-	}
+    /**
+     * コンストラクタ。
+     *
+     * @param properties ブロックの材質や硬さなどの基本プロパティ
+     */
+    public CompactCrafterBlock(Properties properties) {
+        super(properties);
+    }
 
-	// ② 毎Tickの自動クラフト処理（tick）を動かすための設定
-	@Nullable
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-		if (level.isClientSide()) {
-			return null;
-		}
-		return createTickerHelper(type, ModBlockEntities.COMPACT_CRAFTER.get(), CompactCrafterEntity::tick);
-	}
-
-	@Nullable
-	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(
-			BlockEntityType<A> pServerType, BlockEntityType<E> pClientType, BlockEntityTicker<? super E> pTicker) {
-		return pClientType == pServerType ? (BlockEntityTicker<A>) pTicker : null;
-	}
+    /**
+     * このブロックに対応する専用のブロックエンティティ（BlockEntity）を新規作成します。
+     *
+     * @param pos   ブロックの設置座標
+     * @param state ブロックの現在の状態
+     * @return CompactCrafterEntity のインスタンス
+     */
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CompactCrafterEntity(pos, state);
+    }
 }

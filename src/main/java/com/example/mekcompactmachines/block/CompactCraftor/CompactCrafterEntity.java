@@ -9,129 +9,133 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Compact Crafter のブロックエンティティクラス。
+ * <p>
+ * 大容量スロット（最大2048個など）を持つインベントリの管理、およびイベント駆動型の自動クラフトロジック、
+ * さらにGUIメニュー（{@link CompactCrafterMenu}）の提供を行います。
+ */
 public class CompactCrafterEntity extends AbstractCompactMachineEntity {
-	private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
-		@Override
-		protected void onContentsChanged(int slot) {
-			setChanged();
-		}
+    private static final int MACHINE_SLOT = CompactCrafterSlot.values().length;
 
-		@Override
-		public int getSlotLimit(int slot) {
-			if (slot == 0 || slot == 1) {
-				return 2048;
-			}
-			return 64;
-		}
-	};
+    /**
+     * コンストラクタ。
+     * 指定された座標と状態を持つ Compact Crafter のブロックエンティティを初期化します。
+     *
+     * @param pos   ブロックの設置座標
+     * @param state ブロックの現在の状態
+     */
+    public CompactCrafterEntity(BlockPos pos, BlockState state) {
+        super(ModBlockEntities.COMPACT_CRAFTER.get(), pos, state, MACHINE_SLOT);
+    }
 
-	protected final ContainerData data;
-	private int progress = 0;
-	private int maxProgress = 200;
+    /**
+     * 機械内部のインベントリハンドラーを生成します。
+     * <p>
+     * アイテムの変更を検知した際にイベント駆動で即座にクラフト判定を行う（{@link #tryCraft()}）ほか、
+     * {@link CompactCrafterSlot} の定義に基づいてスロットごとの最大スタック数を個別に設定します。
+     *
+     * @param slotCount スロットの総数
+     * @return カスタム設定が適用された ItemStackHandler
+     */
+    @Override
+    protected ItemStackHandler createItemHandler(int slotCount) {
+        return new ItemStackHandler(slotCount) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+                // イベント駆動：アイテムが置かれたり変化した瞬間に自動でクラフトを試行する
+                tryCraft();
+            }
 
-	public CompactCrafterEntity(BlockPos pos, BlockState state) {
-		// ★修正1: スロット数を実際の数に合わせて「4」にする！
-		super(ModBlockEntities.COMPACT_CRAFTER.get(), pos, state, 4);
+            @Override
+            public int getSlotLimit(int slot) {
+                // スロットインデックスに対応する CompactCrafterSlot を取得して上限値を返す
+                CompactCrafterSlot slotEnum = CompactCrafterSlot.fromIndex(slot);
+                if (slotEnum != null) {
+                    return slotEnum.maxStack();
+                }
+                return super.getSlotLimit(slot);
+            }
+        };
+    }
 
-		this.data = new ContainerData() {
-			@Override
-			public int get(int index) {
-				return switch (index) {
-					case 0 -> CompactCrafterEntity.this.progress;
-					case 1 -> CompactCrafterEntity.this.maxProgress;
-					default -> 0;
-				};
-			}
+    /**
+     * ブロックエンティティのデータを追加でNBTタグに保存します（インベントリ状態の永続化）。
+     *
+     * @param nbt データを保存するCompoundTag
+     */
+    @Override
+    protected void saveAdditional(CompoundTag nbt) {
+        nbt.put("inventory", itemHandler.serializeNBT());
+        super.saveAdditional(nbt);
+    }
 
-			@Override
-			public void set(int index, int value) {
-				switch (index) {
-					case 0 -> CompactCrafterEntity.this.progress = value;
-					case 1 -> CompactCrafterEntity.this.maxProgress = value;
-				}
-			}
+    /**
+     * 保存されたNBTタグからブロックエンティティのデータを読み込みます（インベントリ状態の復元）。
+     *
+     * @param nbt データを保持しているCompoundTag
+     */
+    @Override
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
+        itemHandler.deserializeNBT(nbt.getCompound("inventory"));
+    }
 
-			@Override
-			public int getCount() {
-				return 2;
-			}
-		};
-	}
+    /**
+     * このブロックエンティティの表示名（タイトルのローカライズ）を取得します。
+     *
+     * @return 表示名のコンポーネント
+     */
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.mek_compact_machines.compact_crafter");
+    }
 
-	// ★修正2: 親クラスが要求するインベントリの窓口（getter）を実装する
-	@Override
-	public IItemHandler getItemHandler() {
-		return this.itemHandler;
-	}
+    /**
+     * プレイヤーがこのブロックのGUIを開いた際に提供するメニュー（コンテナ）を生成します。
+     *
+     * @param containerId     コンテナID
+     * @param playerInventory プレイヤーのインベントリ
+     * @param player          操作しているプレイヤー
+     * @return 生成された CompactCrafterMenu
+     */
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
+        return new CompactCrafterMenu(containerId, playerInventory, this);
+    }
 
-	@Override
-	protected void saveAdditional(CompoundTag nbt) {
-		nbt.put("inventory", itemHandler.serializeNBT());
-		nbt.putInt("compact_machine.progress", progress);
-		super.saveAdditional(nbt);
-	}
+    /**
+     * クラフトの条件を満たしているかチェックし、条件を満たしている場合は
+     * 即座に素材を消費して出力アイテムを生成します（イベント駆動型）。
+     */
+    public void tryCraft() {
+        // CompactCrafterSlot (Enum) のインデックスを使って安全に各スロットのアイテムを取得する
+        ItemStack glassStack = itemHandler.getStackInSlot(CompactCrafterSlot.INPUT_1.index());
+        ItemStack casingStack = itemHandler.getStackInSlot(CompactCrafterSlot.INPUT_2.index());
+        ItemStack cardboardStack = itemHandler.getStackInSlot(CompactCrafterSlot.CARDBOARD.index());
+        ItemStack outputStack = itemHandler.getStackInSlot(CompactCrafterSlot.OUTPUT.index());
 
-	@Override
-	public void load(CompoundTag nbt) {
-		super.load(nbt);
-		itemHandler.deserializeNBT(nbt.getCompound("inventory"));
-		progress = nbt.getInt("compact_machine.progress");
-	}
+        // 各素材が必要数揃っているか、および出力先が空またはスタック可能かチェック
+        boolean hasGlass = glassStack.getCount() >= CompactCrafterSlot.INPUT_1.maxStack();
+        boolean hasCasing = casingStack.getCount() >= CompactCrafterSlot.INPUT_2.maxStack();
+        boolean hasCardboard = cardboardStack.getCount() >= CompactCrafterSlot.CARDBOARD.maxStack();
+        boolean canOutput = outputStack.isEmpty();
 
-	@Override
-	public Component getDisplayName() {
-		return Component.translatable("block.mek_compact_machines.compact_crafting_table");
-	}
+        if (hasGlass && hasCasing && hasCardboard && canOutput) {
+            // 素材の消費
+            itemHandler.extractItem(CompactCrafterSlot.INPUT_1.index(), CompactCrafterSlot.INPUT_1.maxStack(), false);
+            itemHandler.extractItem(CompactCrafterSlot.INPUT_2.index(), CompactCrafterSlot.INPUT_2.maxStack(), false);
+            itemHandler.extractItem(CompactCrafterSlot.CARDBOARD.index(), CompactCrafterSlot.CARDBOARD.maxStack(), false);
 
-	@Nullable
-	@Override
-	public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-		return new CompactCrafterMenu(containerId, playerInventory, this, this.data);
-	}
-
-	public static void tick(Level level, BlockPos pos, BlockState state, CompactCrafterEntity pEntity) {
-		if (level.isClientSide()) {
-			return;
-		}
-		ItemStack slot0 = pEntity.itemHandler.getStackInSlot(0);
-		ItemStack slot1 = pEntity.itemHandler.getStackInSlot(1);
-		ItemStack slot2 = pEntity.itemHandler.getStackInSlot(2);
-		ItemStack slot3 = pEntity.itemHandler.getStackInSlot(3);
-
-		boolean hasGlass = slot0.getCount() >= 1536;
-		boolean hasCasing = slot1.getCount() >= 200;
-		boolean hasCardboard = slot2.getCount() >= 1;
-		boolean canOutput = slot3.isEmpty();
-
-		if (hasGlass && hasCasing && hasCardboard && canOutput) {
-			pEntity.progress++;
-			setChanged(level, pos, state);
-			if (pEntity.progress >= pEntity.maxProgress) {
-				craftItem(pEntity);
-			}
-		} else {
-			pEntity.resetProgress();
-			setChanged(level, pos, state);
-		}
-	}
-
-	private static void craftItem(CompactCrafterEntity pEntity) {
-		pEntity.itemHandler.getStackInSlot(0).shrink(1536);
-		pEntity.itemHandler.getStackInSlot(1).shrink(200);
-		pEntity.itemHandler.getStackInSlot(2).shrink(1);
-		pEntity.itemHandler.insertItem(3, new ItemStack(ModItems.SUBSPACE_CARDBOARD.get(), 1), false);
-		pEntity.resetProgress();
-	}
-
-	private void resetProgress() {
-		this.progress = 0;
-	}
+            // 出力スロットへのアイテム生成
+            this.itemHandler.insertItem(CompactCrafterSlot.OUTPUT.index(), new ItemStack(ModItems.SUBSPACE_CARDBOARD.get(), 1), false);
+        }
+    }
 }
