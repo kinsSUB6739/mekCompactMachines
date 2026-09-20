@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class CompactCrafterScreen extends AbstractContainerScreen<CompactCrafterMenu> {
 
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/craftingtable_gui.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/compact_crafter_gui.png");
     private static final ResourceLocation GHOST_ICON = ResourceLocation.fromNamespaceAndPath(ModConstants.MOD_ID, "textures/gui/ghost_icon.png");
 
     public CompactCrafterScreen(CompactCrafterMenu menu, Inventory inventory, Component title) {

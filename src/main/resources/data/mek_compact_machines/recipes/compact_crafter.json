@@ -10,6 +10,6 @@
     "infuse_type": "mekanism:refined_obsidian"
   },
   "output": {
-    "item": "mek_compact_machines:compact_crafting_table"
+    "item": "mek_compact_machines:compact_crafter"
   }
 }

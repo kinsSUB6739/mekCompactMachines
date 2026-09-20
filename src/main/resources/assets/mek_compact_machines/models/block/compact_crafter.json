@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "mek_compact_machines:block/compact_crafter_top",
+    "front": "mek_compact_machines:block/compact_crafter_front",
+    "side": "mek_compact_machines:block/compact_crafter_side"
+  }
+}

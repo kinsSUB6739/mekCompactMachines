@@ -12,7 +12,7 @@ import java.util.List;
 public enum CompactCrafterSlot {
 
     OUTPUT(0, 114, 36, 1, true, null),
-    CARDBOARD(1, 67, 36, 1, false, ModConstants.SUBSPACE_CARDBOARD),
+    CARDBOARD(1, 67, 36, 1, false, ModConstants.MOD_ID + ":" + ModConstants.SUBSPACE_CARDBOARD),
     INPUT_1(2, 27, 26, 1536, false, "mekanism:structural_glass"),
     INPUT_2(3, 27, 45, 200, false, "mekanism:induction_casing");
 

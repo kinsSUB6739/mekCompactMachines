@@ -5,6 +5,8 @@ pluginManagement {
             name = 'MinecraftForge'
             url = 'https://maven.minecraftforge.net/'
         }
+        // ↓この1行を追加！
+        maven { url = 'https://maven.parchmentmc.org' }
     }
 }
 
